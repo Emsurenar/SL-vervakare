@@ -2,9 +2,11 @@ name: SL Övervakare
 
 on:
   schedule:
-    # Körs var 5:e minut
     - cron: '*/5 * * * *'
-  workflow_dispatch: # För att kunna starta manuellt från GitHub
+  workflow_dispatch: 
+
+permissions:
+  contents: write # Viktigt: Låter boten spara "vilka larm som redan skickats"
 
 jobs:
   run-sl-monitor:
@@ -24,13 +26,23 @@ jobs:
         python -m pip install --upgrade pip
         cat > requirements.txt << EOF
         requests
-        python-telegram-bot
         EOF
         pip install -r requirements.txt
 
     - name: Kör SL-övervakaren
       env:
-        SL_API_KEY: ${{ secrets.SL_API_KEY }}
         TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
         TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
       run: python sl_monitor.py
+
+    - name: Spara historik (Antispam)
+      run: |
+        git config --local user.email "sl-bot@github.local"
+        git config --local user.name "SL Övervakare Bot"
+        git add sent_deviations.txt || true
+        if git diff --staged --quiet; then
+          echo "Inga nya störningar att spara."
+        else
+          git commit -m "Sparar larmhistorik (antispam)"
+          git push
+        fi
