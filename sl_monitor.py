@@ -2,9 +2,8 @@ import requests
 import os
 from datetime import datetime
 
-# =========================================================
-# KONFIGURATION
-# =========================================================
+
+
 # Ändpunkter för vår sökning (ResRobot v2.1)
 ROUTES = [
     {"from": "Tekniska högskolan (Stockholm)", "to": "Enskede gård T-bana"},
@@ -122,12 +121,11 @@ def send_telegram_alert(route, time_str, status, trip_ext_id, rt_time_str=""):
     uber_dest = "Enskede%20G%C3%A5rd" if "Enskede" in route['to'] else "Medborgarplatsen" if "Medborgar" in route['to'] else "Nytorget"
     
     message = (
-        f"[VARNING] EXAKT RESA FÖRSENAD!\n\n"
+        f"RESA FÖRSENAD!\n\n"
         f"Rutt: {route['from']} -> {route['to']}\n"
         f"Planerad avgång: {time_str}{actual_info}\n"
         f"Status: {status}\n\n"
-        f"*DITT BEVISMATERIAL TILL SL*\n"
-        f"Kopiera och klistra in detta vid din ersättningsansökan:\n"
+        f"*Bevis: *\n"
         f"• Avgång: `{time_str}` (Rutt: {route['from']} -> {route['to']})\n"
         f"• Datum/Tid uppmätt: `{created_time}`\n"
         f"• Internt Rese-ID: `{trip_ext_id}`\n\n"
