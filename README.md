@@ -21,6 +21,3 @@ The Telegram message includes the official timestamp and the internal SL journey
 
 ### Anti-Spam Mechanism
 To prevent spamming the user with repeated notifications for the same ongoing delayed trip, the script maintains a state file (`sent_deviations.txt`). Each time a new event triggers an alarm, its unique ID is stored here, and the file is automatically pushed back to the GitHub repository. This guarantees exactly **one** notification per specific delayed trip.
-
-### Instant Ride-Hailing Integration
-The Telegram notification includes a deep link to the Uber app, prefilled with the destination of that specific route. This allows you to instantly request an alternative ride with a single tap.
